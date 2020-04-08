@@ -40,10 +40,7 @@ room['treasure'].s_to = room['narrow']
 
 # Make a new player object that is currently in the 'outside' room.
 
-playerOne = Player('Matt', room['outside'].name)
-
-print(f'Name: {playerOne.name}\nCurrent Room: {playerOne.current_room}')
-
+playerOne = Player('Matt', room['outside'])
 
 # Write a loop that:
 #
@@ -55,3 +52,28 @@ print(f'Name: {playerOne.name}\nCurrent Room: {playerOne.current_room}')
 # Print an error message if the movement isn't allowed.
 #
 # If the user enters "q", quit the game.
+
+active = True
+
+#gamplay loop
+while active == True:
+
+    print('============================================')
+    print(f'Player: {playerOne.name}')
+    print(f'Current Room: {playerOne.current_room.name}')
+    print(f'{playerOne.current_room.description}')
+    print('============================================')
+
+    #input
+    direction = input('Choose a direction: ').lower()
+
+    if direction == 'n' and playerOne.current_room.n_to:
+        playerOne.current_room = playerOne.current_room.n_to
+    elif direction == 's' and playerOne.current_room.s_to:
+        playerOne.current_room = playerOne.current_room.s_to
+    elif direction == 'e' and playerOne.current_room.e_to:
+        playerOne.current_room = playerOne.current_room.e_to
+    elif direction == 'w' and playerOne.current_room.w_to:
+        playerOne.current_room = playerOne.current_room.w_to
+    else:
+        print('You cannot move in that direction')
