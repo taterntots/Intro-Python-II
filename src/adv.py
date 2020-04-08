@@ -40,9 +40,10 @@ room['treasure'].s_to = room['narrow']
 
 # Make a new player object that is currently in the 'outside' room.
 
-playerOne = Player('Matt', 'outside')
+playerOne = Player('Matt', room['outside'].name)
 
-print(f"{playerOne.name} is {playerOne.current_room}")
+print(f'Name: {playerOne.name}\nCurrent Room: {playerOne.current_room}')
+
 
 # Write a loop that:
 #
