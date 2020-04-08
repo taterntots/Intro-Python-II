@@ -75,5 +75,7 @@ while active == True:
         playerOne.current_room = playerOne.current_room.e_to
     elif direction == 'w' and playerOne.current_room.w_to:
         playerOne.current_room = playerOne.current_room.w_to
+    elif direction == 'q':
+        active = False
     else:
         print('You cannot move in that direction')
