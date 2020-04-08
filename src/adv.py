@@ -1,5 +1,6 @@
 from room import Room
 from player import Player
+from item import Item
 
 # Declare all the rooms
 
@@ -34,6 +35,17 @@ room['narrow'].w_to = room['foyer']
 room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
 
+# Create items
+dagger = Item('dagger', 'Thief dagger made of Mythril')
+print(dagger.name)
+sword = Item('sword', 'The mighty Ragnarok!')
+print(sword.name)
+
+# Add items to rooms
+room['foyer'].add_item(sword.name)
+room['foyer'].add_item(dagger.name)
+room['foyer'].print_list()
+
 #
 # Main
 #
@@ -61,12 +73,14 @@ while active == True:
     print('============================================')
     print(f'Player: {playerOne.name}')
     print(f'Current Room: {playerOne.current_room.name}')
+    print(f'Items Available: {playerOne.current_room.list}\n')
     print(f'{playerOne.current_room.description}')
     print('============================================')
 
     #input
     direction = input('Choose a direction: ').lower()
 
+    #movement logic
     if direction == 'n' and playerOne.current_room.n_to:
         playerOne.current_room = playerOne.current_room.n_to
     elif direction == 's' and playerOne.current_room.s_to:
@@ -79,3 +93,5 @@ while active == True:
         active = False
     else:
         print('You cannot move in that direction')
+
+    #item logic
