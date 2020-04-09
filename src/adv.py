@@ -62,9 +62,24 @@ playerOne = Player('Matt', room['outside'])
 keys = list(room.keys())
 # print(keys)
 
-# print(room['outside'].list)
-# room[keys[0]].remove_item(playerOne.current_room.list[0])
-# print(room['outside'].list)
+print(playerOne.current_room.name)
+if playerOne.current_room.name == 'Outside Cave Entrance':
+    keys = keys[0]
+elif playerOne.current_room.name == 'Foyer':
+    keys = keys[1]
+elif playerOne.current_room.name == 'Grand Overlook':
+      keys = keys[2]
+elif playerOne.current_room.name == 'Narrow Passage':
+      keys = keys[3]
+elif playerOne.current_room.name == 'Treasure Chamber':
+      keys = keys[4]
+
+print(keys)
+
+
+# print(room[keys].list)
+# room[keys].remove_item(playerOne.current_room.list[0])
+# print(room[keys].list)
 
 # Write a loop that:
 #
@@ -111,11 +126,15 @@ while active == True:
     elif len(command) >= 2:
         if command == f'get {playerOne.current_room.list[0]}':
             playerOne.add_inventory(playerOne.current_room.list[0])
-            room[keys[0]].remove_item(playerOne.current_room.list[0])
+            # room[keys].remove_item(playerOne.current_room.list[0])
             print(f'You have picked up {playerOne.inventory[0]}!')
         # elif command == f'get {playerOne.current_room.list[0]}' 
         #     print('There are no more items in this room')
-        elif playerOne.current_room.list == []:
+        # elif playerOne.current_room.list == []:
+        elif command == f'drop {playerOne.inventory[0]}':
+            playerOne.remove_inventory(playerOne.current_room.list[0])
+            print('You have dropped the sword')
+        else:
             print('No such item exists')
     else:
         print('fart')
