@@ -37,14 +37,14 @@ room['treasure'].s_to = room['narrow']
 
 # Create items
 dagger = Item('dagger', 'Thief dagger made of Mythril')
-print(dagger.name)
+# print(dagger.name)
 sword = Item('sword', 'The mighty Ragnarok!')
-print(sword.name)
+# print(sword.name)
 
 # Add items to rooms
-room['foyer'].add_item(sword.name)
+room['outside'].add_item(sword.name)
 room['foyer'].add_item(dagger.name)
-room['foyer'].print_list()
+# room['foyer'].print_list()
 
 #
 # Main
@@ -53,6 +53,18 @@ room['foyer'].print_list()
 # Make a new player object that is currently in the 'outside' room.
 
 playerOne = Player('Matt', room['outside'])
+# print(playerOne.current_room.list[0])
+
+# print(room[playerOne.current_room.list])
+# print(playerOne.current_room.list)
+
+
+keys = list(room.keys())
+# print(keys)
+
+# print(room['outside'].list)
+# room[keys[0]].remove_item(playerOne.current_room.list[0])
+# print(room['outside'].list)
 
 # Write a loop that:
 #
@@ -72,26 +84,38 @@ while active == True:
 
     print('============================================')
     print(f'Player: {playerOne.name}')
+    print(f'Equipment: {playerOne.inventory}')
     print(f'Current Room: {playerOne.current_room.name}')
     print(f'Items Available: {playerOne.current_room.list}\n')
     print(f'{playerOne.current_room.description}')
     print('============================================')
 
     #input
-    direction = input('Choose a direction: ').lower()
+    command = input('Choose a direction: ').lower()
 
     #movement logic
-    if direction == 'n' and playerOne.current_room.n_to:
-        playerOne.current_room = playerOne.current_room.n_to
-    elif direction == 's' and playerOne.current_room.s_to:
-        playerOne.current_room = playerOne.current_room.s_to
-    elif direction == 'e' and playerOne.current_room.e_to:
-        playerOne.current_room = playerOne.current_room.e_to
-    elif direction == 'w' and playerOne.current_room.w_to:
-        playerOne.current_room = playerOne.current_room.w_to
-    elif direction == 'q':
-        active = False
-    else:
-        print('You cannot move in that direction')
-
+    if len(command) < 2:
+        if command == 'n' and playerOne.current_room.n_to:
+            playerOne.current_room = playerOne.current_room.n_to
+        elif command == 's' and playerOne.current_room.s_to:
+            playerOne.current_room = playerOne.current_room.s_to
+        elif command == 'e' and playerOne.current_room.e_to:
+            playerOne.current_room = playerOne.current_room.e_to
+        elif command == 'w' and playerOne.current_room.w_to:
+            playerOne.current_room = playerOne.current_room.w_to
+        elif command == 'q':
+            active = False
+        else:
+            print('You cannot move in that direction')
     #item logic
+    elif len(command) >= 2:
+        if command == f'get {playerOne.current_room.list[0]}':
+            playerOne.add_inventory(playerOne.current_room.list[0])
+            room[keys[0]].remove_item(playerOne.current_room.list[0])
+            print(f'You have picked up {playerOne.inventory[0]}!')
+        # elif command == f'get {playerOne.current_room.list[0]}' 
+        #     print('There are no more items in this room')
+        elif playerOne.current_room.list == []:
+            print('No such item exists')
+    else:
+        print('fart')

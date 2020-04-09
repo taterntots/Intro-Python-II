@@ -9,3 +9,6 @@ class Player:
 
   def add_inventory(self, item):
     self.inventory.append(item)
+
+  def remove_inventory(self, item):
+    self.inventory.remove(item)
