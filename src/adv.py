@@ -35,16 +35,19 @@ room['narrow'].w_to = room['foyer']
 room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
 
-# Create items
-dagger = Item('dagger', 'Thief dagger made of Mythril')
-# print(dagger.name)
-sword = Item('sword', 'The mighty Ragnarok!')
-# print(sword.name)
+# Creates items
+items = {
+    'dagger': Item('dagger', 'Thief dagger made of Mythril'),
+    'sword': Item('sword', 'The mighty Ragnarok!'),
+    'peanuts': Item('peanuts', 'Scrooge McDuck levels'),
+    'staff': Item('staff', 'You shall not pass!')
+}
 
 # Add items to rooms
-room['outside'].add_item(sword.name)
-room['foyer'].add_item(dagger.name)
-# room['foyer'].print_list()
+room['overlook'].add_item(items['sword'])
+room['treasure'].add_item(items['peanuts'])
+room['foyer'].add_item(items['staff'])
+room['foyer'].add_item(items['dagger'])
 
 #
 # Main
@@ -53,33 +56,6 @@ room['foyer'].add_item(dagger.name)
 # Make a new player object that is currently in the 'outside' room.
 
 playerOne = Player('Matt', room['outside'])
-# print(playerOne.current_room.list[0])
-
-# print(room[playerOne.current_room.list])
-# print(playerOne.current_room.list)
-
-
-keys = list(room.keys())
-# print(keys)
-
-print(playerOne.current_room.name)
-if playerOne.current_room.name == 'Outside Cave Entrance':
-    keys = keys[0]
-elif playerOne.current_room.name == 'Foyer':
-    keys = keys[1]
-elif playerOne.current_room.name == 'Grand Overlook':
-      keys = keys[2]
-elif playerOne.current_room.name == 'Narrow Passage':
-      keys = keys[3]
-elif playerOne.current_room.name == 'Treasure Chamber':
-      keys = keys[4]
-
-print(keys)
-
-
-# print(room[keys].list)
-# room[keys].remove_item(playerOne.current_room.list[0])
-# print(room[keys].list)
 
 # Write a loop that:
 #
@@ -97,19 +73,26 @@ active = True
 #gamplay loop
 while active == True:
 
+    #shortcuts
+    current_room = playerOne.current_room
+    room_items = [item.name for item in current_room.list]
+    player_equipment = [item.name for item in playerOne.inventory]
+
+    #HUD
     print('============================================')
     print(f'Player: {playerOne.name}')
-    print(f'Equipment: {playerOne.inventory}')
-    print(f'Current Room: {playerOne.current_room.name}')
-    print(f'Items Available: {playerOne.current_room.list}\n')
-    print(f'{playerOne.current_room.description}')
+    print(f'Equipment: {player_equipment}')
+    print(f'Current Room: {current_room.name}')
+    print(f'Items Available: {room_items}\n')
+    print(f'{current_room.description}')
     print('============================================')
 
     #input
-    command = input('Choose a direction: ').lower()
+    command = input('Choose a direction [n][s][e][w] or pickup/drop an item [get][drop]: ').lower().split(" ")
 
     #movement logic
     if len(command) < 2:
+        command = command[0]
         if command == 'n' and playerOne.current_room.n_to:
             playerOne.current_room = playerOne.current_room.n_to
         elif command == 's' and playerOne.current_room.s_to:
@@ -123,18 +106,37 @@ while active == True:
         else:
             print('You cannot move in that direction')
     #item logic
-    elif len(command) >= 2:
-        if command == f'get {playerOne.current_room.list[0]}':
-            playerOne.add_inventory(playerOne.current_room.list[0])
-            # room[keys].remove_item(playerOne.current_room.list[0])
-            print(f'You have picked up {playerOne.inventory[0]}!')
-        # elif command == f'get {playerOne.current_room.list[0]}' 
-        #     print('There are no more items in this room')
-        # elif playerOne.current_room.list == []:
-        elif command == f'drop {playerOne.inventory[0]}':
-            playerOne.remove_inventory(playerOne.current_room.list[0])
-            print('You have dropped the sword')
-        else:
-            print('No such item exists')
-    else:
-        print('fart')
+    else: 
+        if command[0] == 'get':
+            if command[1] in room_items:
+                playerOne.add_inventory(items[command[1]])
+                items[command[1]].on_take()
+                
+                for i, item in enumerate(room_items):
+                    if item == command[1]:
+                        del current_room.list[i]
+            else:
+                print(f'{command[1]} is not in this room')
+        
+        if command[0] == 'drop':
+            if command[1] in player_equipment:
+                current_room.add_item(items[command[1]])
+                items[command[1]].on_drop()
+
+                for i, item in enumerate(player_equipment):
+                    if item == command[1]:
+                        del playerOne.inventory[i]
+            else:
+                print(f'{command[1]} is not in your inventory')
+
+
+                    # if command == f'get {item[i]}':
+                    #     playerOne.add_inventory(items[room_items[i]])
+                    #     # room[keys].remove_item(room_items[i])
+                    #     # print(f'You have picked up {playerOne.inventory[i]}!')
+                    # # elif command == f'drop {playerOne.inventory[i]}':
+                    # #     playerOne.remove_inventory(room_list[i])
+                    # #     room[keys].add_item(room_list[i])
+                    # #     print('You have dropped {room_list[i]}')
+                    # else:
+                    #     print('No such item exists')
